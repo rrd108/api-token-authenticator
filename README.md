@@ -49,7 +49,7 @@ bin/cake plugin load ApiTokenAuthenticator
 or manually add the following line to your app's `src/Application.php` file's `bootstrap()` function:
 
 ```php
-$this->addPlugin('Rrd108/ApiTokenAuthenticator');
+$this->addPlugin('ApiTokenAuthenticator');
 ```
 
 You should comment out `CsrfProtectionMiddleware`.
