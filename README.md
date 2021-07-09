@@ -4,7 +4,7 @@ A Simple Token Authentication Plugin for CakePHP 4 REST API-s.
 
 ## Prerequisites
 
-You have a database table for the users, where you have a field name `token`.
+You have a database table for the users, where you have a field name `token`, a field named `password` what contains the `md5` hash of the user's password.
 
 ## Authentication
 
@@ -49,9 +49,7 @@ bin/cake plugin load ApiTokenAuthenticator
 or manually add the following line to your app's `src/Application.php` file's `bootstrap()` function:
 
 ```php
-use ApiTokenAuthenticator\Plugin as ApiTokenAuthenticator;
-
-$this->addPlugin(ApiTokenAuthenticator::class);
+$this->addPlugin('Rrd108/ApiTokenAuthenticator');
 ```
 
 You should comment out `CsrfProtectionMiddleware`.
