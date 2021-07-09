@@ -92,3 +92,17 @@ public function login()
     }
 }
 ```
+
+## Access without authentication
+
+If you want to let the users to access a resource without authentication you should state it in the controller's `beforeFilter()` method.
+
+````php
+public function beforeFilter(\Cake\Event\EventInterface $event)
+{
+    parent::beforeFilter($event);
+    $this->Authentication->allowUnauthenticated(['index']);
+}
+````
+
+This will allow users to access `/users.json` url without authentication.
