@@ -5,7 +5,7 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Rrd108\\ApiTokenAuthenticator\\": "src/"
+      "ApiTokenAuthenticator\\": "src/"
     }
   },
   "authors": [
