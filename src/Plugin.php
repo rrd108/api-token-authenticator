@@ -19,10 +19,14 @@ class Plugin extends BasePlugin implements AuthenticationServiceProviderInterfac
     // TODO disable CSRF middleware - now it is manually in Application.php
     public function middleware(MiddlewareQueue $middleware): MiddlewareQueue
     {
-        // Add middleware here.
+// Add middleware here.
         $middleware = parent::middleware($middleware)
-          ->add(new AuthenticationMiddleware($this));
-
+            // if we want to use Authorization plugin along with this, than Authentication middleware should be BEFORE the Authorization middleware
+          ->insertAfter(
+              'Cake\Http\Middleware\BodyParserMiddleware',
+              new AuthenticationMiddleware($this)
+          );
+        
         return $middleware;
     }
 
