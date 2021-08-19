@@ -23,7 +23,7 @@ class Plugin extends BasePlugin implements AuthenticationServiceProviderInterfac
         $middleware = parent::middleware($middleware)
             // if we want to use Authorization plugin along with this, than Authentication middleware should be BEFORE the Authorization middleware
           ->insertAfter(
-              'Cake\Routing\Middleware\RoutingMiddleware',
+              'Cake\Http\Middleware\BodyParserMiddleware',
               new AuthenticationMiddleware($this)
           );
 
