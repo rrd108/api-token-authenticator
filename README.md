@@ -2,15 +2,26 @@
 
 A Simple Token Authentication Plugin for CakePHP 4 REST API-s.
 
-## Prerequisites
+## Configuration
 
-You have a database table for the users, where you have a field name `token`, a field named `password` what contains the `md5` hash of the user's password.
+For defaults see `config/apiTokenAuthenticator.php` file in the plugin's directory. 
+
+If you want to change any of the values then create your own `apiTokenAuthenticator.php` file at your project's `config` directory. In your config file, you should use only those keys that you want to change. It will be merged to the default one. So, for example, if you are happy with all the options, except in your case the token's header name is `Authorization`, then you have to put this into your on config file.
+
+```php
+<?php
+return [
+  'ApiTokenAuthenticator' => [
+    'header' => 'Authorization',
+  ]
+];
+```
 
 ## Authentication
 
 The plugin authentication workflow is the following.
 
-At your client appliacation you should send a POST request to `/users/login.json` with a JSON object like this.
+At your client appliacation you should send a POST request to `/users/login.json` (or what you set in your `apiTokenAuthenticator.php` file) with a JSON object like this.
 
 ```json
 {
@@ -30,7 +41,7 @@ If the login was successful than you will get a response like this.
 }
 ```
 
-Than you can use this token to authenticate yourself for accessing urls what requires authentication. The token should be sent in a request header named `Token`.
+Than you can use this token to authenticate yourself for accessing urls what requires authentication. The token should be sent in a request header named `Token` (or what you set in your `apiTokenAuthenticator.php` file).
 
 ## Installation
 
@@ -97,12 +108,13 @@ public function login()
 
 If you want to let the users to access a resource without authentication you should state it in the controller's `beforeFilter()` method.
 
-````php
+```php
+// For example in UsersController.php
 public function beforeFilter(\Cake\Event\EventInterface $event)
 {
     parent::beforeFilter($event);
     $this->Authentication->allowUnauthenticated(['index']);
 }
-````
+```
 
 This will allow users to access `/users.json` url without authentication.
