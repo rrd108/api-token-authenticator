@@ -4,7 +4,7 @@ A Simple Token Authentication Plugin for CakePHP 4 REST API-s.
 
 ## Configuration
 
-For defaults see `config/apiTokenAuthenticator.php` file in the plugin's directory. 
+For defaults see `config/apiTokenAuthenticator.php` file in the plugin's directory.
 
 If you want to change any of the values then create your own `apiTokenAuthenticator.php` file at your project's `config` directory. In your config file, you should use only those keys that you want to change. It will be merged to the default one. So, for example, if you are happy with all the options, except in your case the token's header name is `Authorization`, then you have to put this into your on config file.
 
@@ -25,8 +25,8 @@ At your client appliacation you should send a POST request to `/users/login.json
 
 ```json
 {
-  "email": "rrd@webmania.cc",
-  "password": "rrd"
+	"email": "rrd@webmania.cc",
+	"password": "rrd"
 }
 ```
 
@@ -34,10 +34,10 @@ If the login was successful than you will get a response like this.
 
 ```json
 {
-  "user": {
-    "id": 1,
-    "token": "yourSecretTokenComingFromTheDatabase"
-  }
+	"user": {
+		"id": 1,
+		"token": "yourSecretTokenComingFromTheDatabase"
+	}
 }
 ```
 
@@ -119,13 +119,13 @@ public function beforeFilter(\Cake\Event\EventInterface $event)
 
 This will allow users to access `/users.json` url without authentication.
 
-# Migration 
+# Migration
 
 ## Migration form version 0.1
 
 Version 0.2 is totally backward compatible with version 0.1
 
-By default, now we use CakePHP's default password hashing instead of `md5` as it was less secure. 
+By default, now we use CakePHP's default password hashing instead of `md5` as it was less secure.
 Inspite of this your current users will be able to login with their current password, but if you want to use the more secure hasing for new users and keep old users as they are, you have to do the following.
 
 1. Make sure in your database the password field is at least 60 characters long.
@@ -161,4 +161,3 @@ return [
   ]
 ];
 ```
-
