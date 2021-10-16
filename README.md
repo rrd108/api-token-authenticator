@@ -76,6 +76,17 @@ public function initialize(): void
 }
 ```
 
+Update your `src/Model/Entity/User.php` file adding the following.
+
+```php
+use Authentication\PasswordHasher\DefaultPasswordHasher;
+protected function _setPassword(string $password)
+  {
+    $hasher = new DefaultPasswordHasher();
+    return $hasher->hash($password);
+  }
+```
+
 As you probably will use JSON urls, do not forget to add this lien to your `routes.php` file.
 
 ```php
