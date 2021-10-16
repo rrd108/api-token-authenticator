@@ -15,9 +15,11 @@ return [
             'action' => 'login.json'
 
         ],
-
-        // if you want to use a different password hasher than the default you can define it here
-        /*'passwordHasher' => [
+        // password hasher 
+        'passwordHasher' => 'default',
+        // if you already have users with md5 passwords than use this instead of the default
+        /*
+        'passwordHasher' => [
             'className' => 'Authentication.Fallback',
             'hashers' => [
                 'Authentication.Default',

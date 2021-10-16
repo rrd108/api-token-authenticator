@@ -85,10 +85,10 @@ class Plugin extends BasePlugin implements AuthenticationServiceProviderInterfac
             ]),
         ]);
 
-        if (!isset($options['passwordHasher'])) {
+        if ($options['passwordHasher'] == 'default') {
             $service->loadIdentifier('Authentication.Password', compact('fields'));
         }
-        if (isset($options['passwordHasher'])) {
+        if (is_array($options['passwordHasher'])) {
             $service->loadIdentifier(
                 'Authentication.Password',
                 [
