@@ -2,17 +2,18 @@
 
 namespace ApiTokenAuthenticator;
 
+use Cake\Core\Configure;
+use Cake\Routing\Router;
+use Cake\Core\BasePlugin;
+use Cake\Http\MiddlewareQueue;
+use Cake\Console\CommandCollection;
 use Authentication\AuthenticationService;
+use Cake\Core\PluginApplicationInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Authentication\AuthenticationServiceInterface;
-use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Identifier\IdentifierInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
-use Cake\Console\CommandCollection;
-use Cake\Core\BasePlugin;
-use Cake\Core\PluginApplicationInterface;
-use Cake\Http\MiddlewareQueue;
-use Cake\Routing\Router;
-use Psr\Http\Message\ServerRequestInterface;
+use Authentication\AuthenticationServiceProviderInterface;
 
 class Plugin extends BasePlugin implements AuthenticationServiceProviderInterface
 {
@@ -22,10 +23,10 @@ class Plugin extends BasePlugin implements AuthenticationServiceProviderInterfac
         // Add middleware here.
         $middleware = parent::middleware($middleware)
             // if we want to use Authorization plugin along with this, than Authentication middleware should be BEFORE the Authorization middleware
-          ->insertAfter(
-              'Cake\Http\Middleware\BodyParserMiddleware',
-              new AuthenticationMiddleware($this)
-          );
+            ->insertAfter(
+                'Cake\Http\Middleware\BodyParserMiddleware',
+                new AuthenticationMiddleware($this)
+            );
 
         return $middleware;
     }
@@ -62,13 +63,15 @@ class Plugin extends BasePlugin implements AuthenticationServiceProviderInterfac
     {
         $service = new AuthenticationService();
 
+        $options = Configure::read('ApiTokenAuthenticator');
+
         $fields = [
-            IdentifierInterface::CREDENTIAL_USERNAME => 'email',
-            IdentifierInterface::CREDENTIAL_PASSWORD => 'password'
+            IdentifierInterface::CREDENTIAL_USERNAME => $options['fields']['username'],
+            IdentifierInterface::CREDENTIAL_PASSWORD => $options['fields']['password']
         ];
 
         $service->loadAuthenticator('Authentication.Token', [
-            'header' => 'Token',
+            'header' => $options['header'],
         ]);
         $service->loadIdentifier('Authentication.Token');
 
@@ -77,28 +80,24 @@ class Plugin extends BasePlugin implements AuthenticationServiceProviderInterfac
             'loginUrl' => Router::url([
                 'prefix' => false,
                 'plugin' => null,
-                'controller' => 'Users',
-                'action' => 'login.json',
+                'controller' => $options['login']['controller'],
+                'action' => $options['login']['action'],
             ]),
         ]);
-        $service->loadIdentifier(
-            'Authentication.Password',
-            [
-            'fields' => $fields,
-            'passwordHasher' => [
-                'className' => 'Authentication.Fallback',
-                'hashers' => [
-                    'Authentication.Default',
-                    [
-                        'className' => 'Authentication.Legacy',
-                        'hashType' => 'md5',
-                        'salt' => false // turn off default usage of salt
-                    ],
+
+        if (!isset($options['passwordHasher'])) {
+            $service->loadIdentifier('Authentication.Password', compact('fields'));
+        }
+        if (isset($options['passwordHasher'])) {
+            $service->loadIdentifier(
+                'Authentication.Password',
+                [
+                    'fields' => $fields,
+                    'passwordHasher' => $options['passwordHasher']
                 ]
-            ]
-            ]
-        );
-        
+            );
+        }
+
         return $service;
     }
 }
