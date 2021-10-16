@@ -118,3 +118,24 @@ public function beforeFilter(\Cake\Event\EventInterface $event)
 ```
 
 This will allow users to access `/users.json` url without authentication.
+
+# Migration 
+
+## Migration form version 0.x
+
+Version 1.0 is __NOT__ backward compatible with version 0.x
+
+By default now we use CakePHP's default password hashing instead of `md5` as it more secure. So if you want to update you have to do the following.
+
+1. Make sure in your database the password field is at least 60 characters long.
+2. Update your `src/Model/Entity/User.php` file adding the following.
+```php
+use Authentication\PasswordHasher\DefaultPasswordHasher;
+protected function _setPassword(string $password)
+  {
+    $hasher = new DefaultPasswordHasher();
+    return $hasher->hash($password);
+  }
+```
+3. Update the passwords TODO
+
