@@ -121,14 +121,17 @@ This will allow users to access `/users.json` url without authentication.
 
 # Migration 
 
-## Migration form version 0.x
+## Migration form version 0.1
 
-Version 1.0 is __NOT__ backward compatible with version 0.x
+Version 0.2 is totally backward compatible with version 0.1
 
-By default now we use CakePHP's default password hashing instead of `md5` as it more secure. So if you want to update you have to do the following.
+By default, now we use CakePHP's default password hashing instead of `md5` as it was less secure. 
+Inspite of this your current users will be able to login with their current password, but if you want to use the more secure hasing for new users and keep old users as they are, you have to do the following.
 
 1. Make sure in your database the password field is at least 60 characters long.
-2. Update your `src/Model/Entity/User.php` file adding the following.
+
+2. Update your `src/Model/Entity/User.php` file adding the following. By this whenever and old user with and `md5` hashed password updates his/her password it will be hashed with the default hashing algorythm.
+
 ```php
 use Authentication\PasswordHasher\DefaultPasswordHasher;
 protected function _setPassword(string $password)
@@ -137,5 +140,25 @@ protected function _setPassword(string $password)
     return $hasher->hash($password);
   }
 ```
-3. Update the passwords TODO
+
+3. In your `apiTokenAuthenticator.php` file you should define this passwordHasher array.
+
+```php
+return [
+  'ApiTokenAuthenticator' => [
+    // any other custom settings
+    // ...
+      'passwordHasher' => [
+        'className' => 'Authentication.Fallback',
+        'hashers' => [
+          'Authentication.Default', [
+            'className' => 'Authentication.Legacy',
+            'hashType' => 'md5',
+            'salt' => false
+          ],
+        ]
+    ]
+  ]
+];
+```
 
