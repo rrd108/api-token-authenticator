@@ -1,20 +1,23 @@
 {
-  "name": "rrd108/api-token-authenticator",
-  "description": "A Simple Token Authentication Plugin for CakePHP 4 REST API-s",
-  "type": "cakephp-plugin",
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "ApiTokenAuthenticator\\": "src/"
-    }
-  },
-  "authors": [
-    {
-      "name": "rrd",
-      "email": "rrd@1108.cc"
-    }
-  ],
-  "require": {
-    "cakephp/authentication": "^2.0"
-  }
+	"name": "rrd108/api-token-authenticator",
+	"description": "A Simple Token Authentication Plugin for CakePHP 4 REST API-s",
+	"type": "cakephp-plugin",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"ApiTokenAuthenticator\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "rrd",
+			"email": "rrd@1108.cc"
+		}
+	],
+	"require": {
+		"cakephp/authentication": "^2.0"
+	},
+	"suggest": {
+		"rrd108/cakephp-json-api-exception": "Make your CakePHP 4 JSON REST API response more descriptive on errors"
+	}
 }
