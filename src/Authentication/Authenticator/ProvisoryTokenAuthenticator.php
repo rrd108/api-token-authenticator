@@ -21,7 +21,7 @@ class ProvisoryTokenAuthenticator extends TokenAuthenticator
 
         $options = Configure::read('ApiTokenAuthenticator');
 
-        if ($options['tokenExpiration'] && $result->getData()[$options['tokenExpiration']] < FrozenTime::now()) {
+        if (isset($options['tokenExpiration']) && $result->getData()[$options['tokenExpiration']] < FrozenTime::now()) {
             return new Result(null, 'TOKEN_EXPIRED');
         }
 
