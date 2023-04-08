@@ -14,6 +14,7 @@ use Authentication\AuthenticationServiceInterface;
 use Authentication\Identifier\IdentifierInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Authentication\AuthenticationServiceProviderInterface;
+use ApiTokenAuthenticator\Authentication\Authenticator\ProvisoryTokenAuthenticator;
 
 class Plugin extends BasePlugin implements AuthenticationServiceProviderInterface
 {
@@ -70,7 +71,7 @@ class Plugin extends BasePlugin implements AuthenticationServiceProviderInterfac
             IdentifierInterface::CREDENTIAL_PASSWORD => $options['fields']['password']
         ];
 
-        $service->loadAuthenticator('Authentication.Token', [
+        $service->loadAuthenticator(ProvisoryTokenAuthenticator::class, [
             'header' => $options['header'],
         ]);
         $service->loadIdentifier('Authentication.Token');

@@ -6,7 +6,7 @@ A Simple Token Authentication Plugin for CakePHP 4 REST API-s.
 
 For defaults see `config/apiTokenAuthenticator.php` file in the plugin's directory.
 
-If you want to change any of the values then create your own `apiTokenAuthenticator.php` file at your project's `config` directory. In your config file, you should use only those keys that you want to change. It will be merged to the default one. So, for example, if you are happy with all the options, except in your case the token's header name is `Authorization`, then you have to put this into your on config file.
+If you want to change any of the values then create your own `config/apiTokenAuthenticator.php` file at your project's `config` directory. In your config file, you should use only those keys that you want to change. It will be merged to the default one. So, for example, if you are happy with all the options, except in your case the token's header name is `Authorization`, then you have to put this into your on config file.
 
 ```php
 <?php
@@ -21,12 +21,12 @@ return [
 
 The plugin authentication workflow is the following.
 
-At your client appliacation you should send a POST request to `/users/login.json` (or what you set in your `apiTokenAuthenticator.php` file) with a JSON object like this.
+At your client appliacation you should send a POST request to `/users/login.json` (or what you set in your `config/apiTokenAuthenticator.php` file) with a JSON object like this.
 
 ```json
 {
-	"email": "rrd@webmania.cc",
-	"password": "rrd"
+  "email": "rrd@webmania.cc",
+  "password": "rrd"
 }
 ```
 
@@ -34,14 +34,14 @@ If the login was successful than you will get a response like this.
 
 ```json
 {
-	"user": {
-		"id": 1,
-		"token": "yourSecretTokenComingFromTheDatabase"
-	}
+  "user": {
+    "id": 1,
+    "token": "yourSecretTokenComingFromTheDatabase"
+  }
 }
 ```
 
-Than you can use this token to authenticate yourself for accessing urls what requires authentication. The token should be sent in a request header named `Token` (or what you set in your `apiTokenAuthenticator.php` file).
+Than you can use this token to authenticate yourself for accessing urls what requires authentication. The token should be sent in a request header named `Token` (or what you set in your `config/apiTokenAuthenticator.php` file).
 
 ## Installation
 
@@ -115,6 +115,66 @@ public function login()
 }
 ```
 
+## Token expiration
+
+By default tokens are not invalidated by the plugin, you can use them permanently.
+If you want the plugin to use tokens only for a certain period of time, you should do the following steps.
+
+1. Add a column to your `users` table named `token_expiration` and set it's type to `datetime`. You can use a different field name, but you have to change it in the following steps.
+
+2. In your `config/apiTokenAuthenticator.php` file set `'tokenExpiration' => 'token_expiration'`.
+
+3. Update your `src/Model/Entity/User.php` file adding the field to the `$accessible` array.
+
+```php
+protected $_accessible = [
+  'email' => true,
+  // your other fields here
+  'token' => true,
+  'token_expiration' => true,
+];
+```
+
+4. Update your `src/Model/Table/UsersTable.php` file adding the following.
+
+```php
+$validator
+  ->dateTime('token_expiration')
+  ->allowEmptyDateTime('token_expiration');
+```
+
+5. In your `src/Controller/UsersController.php` file you should modify `login()` method.
+
+```php
+public function login()
+{
+  $result = $this->Authentication->getResult();
+  if ($result->isValid()) {
+      $userIdentity = $this->Authentication->getIdentity();
+      $user = $userIdentity->getOriginalData();
+      list($user->token, $user->token_expiration) = $this->generateToken();
+      $user = $this->Users->save($user);
+
+      $this->set(compact('user'));
+      $this->viewBuilder()->setOption('serialize', ['user']);
+
+      // delete all expired tokens
+      $this->Users->updateAll(
+          ['token' => null, 'token_expiration' => null],
+          ['token_expiration <' => Chronos::now()]
+      );
+  }
+}
+
+private function generateToken(string $expiration = '+6 hours')
+{
+  $length = 36;
+  $random = base64_encode(Security::randomBytes(36));
+  $cleaned = preg_replace('/[^A-Za-z0-9]/', '', $random);
+  return [$cleaned, strtotime($expiration)];
+}
+```
+
 ## Access without authentication
 
 If you want to let the users to access a resource without authentication you should state it in the controller's `beforeFilter()` method.
@@ -152,7 +212,7 @@ protected function _setPassword(string $password)
   }
 ```
 
-3. In your `apiTokenAuthenticator.php` file you should define this passwordHasher array.
+3. In your `config/apiTokenAuthenticator.php` file you should define this passwordHasher array.
 
 ```php
 return [

@@ -30,6 +30,6 @@ return [
                 ],
             ]
         ]*/
-
+        //'tokenExpiration' => 'token_expiration', // if it is set, you should have a datetime field in your users table with the name of this value
     ]
 ];
