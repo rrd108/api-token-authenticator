@@ -6,7 +6,7 @@ A Simple Token Authentication Plugin for CakePHP 4 REST API-s.
 
 For defaults see `config/apiTokenAuthenticator.php` file in the plugin's directory.
 
-If you want to change any of the values then create your own `config/apiTokenAuthenticator.php` file at your project's `config` directory. In your config file, you should use only those keys that you want to change. It will be merged to the default one. So, for example, if you are happy with all the options, except in your case the token's header name is `Authorization`, then you have to put this into your on config file.
+If you want to change any of the values then create your own `config/apiTokenAuthenticator.php` file at your project's `config` directory. In your config file, you should use _only_ those keys that you want to change. It will be merged to the default one. So, for example, if you are happy with all the options, except in your case the token's header name is `Authorization`, then you have to put this into your on config file.
 
 ```php
 <?php
