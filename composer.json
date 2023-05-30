@@ -8,6 +8,11 @@
       "ApiTokenAuthenticator\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "ApiTokenAuthenticator\\Test\\": "tests/"
+    }
+  },
   "authors": [
     {
       "name": "rrd",

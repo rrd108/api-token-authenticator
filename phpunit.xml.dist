@@ -10,7 +10,6 @@
 
   <php>
     <ini name="memory_limit" value="-1"/>
-    <env name="FIXTURE_SCHEMA_METADATA" value="./vendor/cakephp/cakephp/tests/schema.php"/>
   </php>
 
   <testsuites>
@@ -18,5 +17,14 @@
       <directory>tests/TestCase/</directory>
     </testsuite>
   </testsuites>
+
+  <listeners>
+    <listener
+    class="\Cake\TestSuite\Fixture\FixtureInjector">
+        <arguments>
+            <object class="\Cake\TestSuite\Fixture\FixtureManager" />
+        </arguments>
+    </listener>
+  </listeners>
 
 </phpunit>

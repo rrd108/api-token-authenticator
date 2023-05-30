@@ -39,10 +39,15 @@ Configure::write('App', [
     ],
 ]);
 
-if (!getenv('DB_URL')) {
-    putenv('DB_URL=sqlite:///:memory:');
-}
-ConnectionManager::setConfig('test', ['url' => getenv('DB_URL')]);
+ConnectionManager::setConfig('test', [
+    'className' => 'Cake\Database\Connection',
+    'driver' => 'Cake\Database\Driver\Sqlite',
+    'database' => ':memory:',
+    'encoding' => 'utf8',
+    'timezone' => 'UTC',
+    'quoteIdentifiers' => false,
+]);
+
 Router::reload();
 Security::setSalt('YJfIxfs2guVoUubWDYhG93b0qyJfIxfs2guwvniR2G0FgaC9mi');
 
