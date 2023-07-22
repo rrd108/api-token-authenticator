@@ -16,7 +16,7 @@ use Authentication\Middleware\AuthenticationMiddleware;
 use Authentication\AuthenticationServiceProviderInterface;
 use ApiTokenAuthenticator\Authentication\Authenticator\ProvisoryTokenAuthenticator;
 
-class Plugin extends BasePlugin implements AuthenticationServiceProviderInterface
+class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationServiceProviderInterface
 {
     // TODO disable CSRF middleware - now it is manually in Application.php
     public function middleware(MiddlewareQueue $middleware): MiddlewareQueue
