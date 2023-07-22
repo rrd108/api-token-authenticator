@@ -5,7 +5,7 @@ on:
     branches: [ci-test]
 
 jobs:
-  testsuite-php-7.4:
+  testsuite_php_7_4:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +28,7 @@ jobs:
           export CODECOVERAGE=1
           vendor/bin/phpunit --verbose tests
 
-  testsuite-php-8.1:
+  testsuite_php_8_1:
     runs-on: ubuntu-latest
 
     steps:
