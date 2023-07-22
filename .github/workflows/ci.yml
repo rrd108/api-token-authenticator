@@ -19,10 +19,9 @@ jobs:
           - ./:/var/www/html
 
       php74:
-        build:
-          context: ./docker/php/
-        expose:
-          - 9003
+        image: php:7.4
+        ports:
+          - 9003:9003
         volumes:
           - .:/var/www/html
           - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -33,13 +32,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up PHP and Nginx
-        run: docker-compose up -d
+        run: docker-compose up -d webserver
 
       - name: Install dependencies
-        run: docker-compose exec php74 composer install
+        run: docker-compose run --rm php74 composer install
 
       - name: Run PHPUnit tests
-        run: docker-compose exec php74 vendor/bin/phpunit
+        run: docker-compose run --rm php74 vendor/bin/phpunit
 
       - name: Clean up
         run: docker-compose down
