@@ -19,11 +19,11 @@ jobs:
           coverage: pcov
 
       - name: Install Packages in the temporary container
-        working-directory: ./api
+        working-directory: ./
         run: composer install
 
       - name: Run tests
-        working-directory: ./api
+        working-directory: ./
         run: |
           export CODECOVERAGE=1
           vendor/bin/phpunit --verbose tests
