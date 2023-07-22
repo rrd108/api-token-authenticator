@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ci-test]
+
+jobs:
+  testsuite:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Enviroment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: intl, mbstring, simplexml, pdo, pdo_mysql
+          coverage: pcov
+
+      - name: Install Packages in the temporary container
+        working-directory: ./api
+        run: composer install
+
+      - name: Run tests
+        working-directory: ./api
+        run: |
+          export CODECOVERAGE=1
+          vendor/bin/phpunit --verbose tests
