@@ -56,3 +56,8 @@ Plugin::getCollection()->add(new \Authentication\Plugin());
 $_SERVER['PHP_SELF'] = '/';
 
 Configure::load('ApiTokenAuthenticator.apiTokenAuthenticator');
+
+
+use Cake\TestSuite\Fixture\SchemaLoader;
+// Load a schema dump file.
+(new SchemaLoader())->loadSqlFiles('tests/schema.sql', 'test');
