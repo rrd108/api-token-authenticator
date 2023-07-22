@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  testsuite_php_7_4:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP 7.4 Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: intl, mbstring, simplexml, pdo, pdo_mysql
+          coverage: pcov
+
+      - name: Install Packages in the temporary container
+        working-directory: ./
+        run: composer install
+
+      - name: Run tests with PHP 7.4
+        working-directory: ./
+        run: |
+          export CODECOVERAGE=1
+          vendor/bin/phpunit --verbose tests
+
+  testsuite_php_8_1:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP 8.1 Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: intl, mbstring, simplexml, pdo, pdo_mysql
+          coverage: pcov
+
+      - name: Install Packages in the temporary container
+        working-directory: ./
+        run: composer install
+
+      - name: Run tests with PHP 8.1
+        working-directory: ./
+        run: |
+          export CODECOVERAGE=1
+          vendor/bin/phpunit --verbose tests
