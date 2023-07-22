@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ci-test]
+    branches: [main]
 
 jobs:
   testsuite_php_7_4:
