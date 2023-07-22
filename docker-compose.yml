@@ -7,15 +7,15 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./:/var/www/html
+      - ${PWD}/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ${PWD}/:/var/www/html
 
   php74:
     container_name: api-token-authenticator-php74
-    build: ./docker/php/
+    build: ${PWD}/docker/php/
     expose:
       - 9003
     volumes:
-      - .:/var/www/html
-      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-      - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ${PWD}:/var/www/html
+      - ${PWD}/docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ${PWD}/docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
