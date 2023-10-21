@@ -3,3 +3,5 @@ composer.phar
 .vscode/launch.json
 
 .phpunit.result.cache
+
+.phpunit.cache/
