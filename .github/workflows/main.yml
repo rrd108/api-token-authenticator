@@ -26,4 +26,6 @@ jobs:
         working-directory: ./
         run: |
           export CODECOVERAGE=1
-          vendor/bin/phpunit --verbose tests
+          steps.run.shell:
+            run: |
+              vendor/bin/phpunit -v tests
