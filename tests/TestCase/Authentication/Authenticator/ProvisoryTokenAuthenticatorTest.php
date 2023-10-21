@@ -11,7 +11,7 @@ use ApiTokenAuthenticator\Authentication\Authenticator\ProvisoryTokenAuthenticat
 
 class ProvisoryTokenAuthenticatorTest extends TestCase
 {
-    public $fixtures = ['plugin.ApiTokenAuthenticator.Users',];
+    protected array $fixtures = ['plugin.ApiTokenAuthenticator.Users',];
 
     private $identifiers;
     private $request;
