@@ -23,4 +23,4 @@ jobs:
 
       - name: Run tests with PHP 8.1
         working-directory: ./
-        run: vendor/bin/phpunit -v tests
+        run: vendor/bin/phpunit tests
