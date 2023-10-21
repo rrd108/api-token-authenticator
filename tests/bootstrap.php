@@ -22,7 +22,7 @@ $root = $findRoot(__FILE__);
 unset($findRoot);
 chdir($root);
 
-require_once 'vendor/cakephp/cakephp/src/basics.php';
+require_once 'vendor/cakephp/cakephp/src/functions.php';
 require_once 'vendor/autoload.php';
 
 define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
