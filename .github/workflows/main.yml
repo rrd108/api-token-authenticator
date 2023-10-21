@@ -16,7 +16,6 @@ jobs:
         with:
           php-version: '8.1'
           extensions: intl, mbstring, simplexml, pdo, pdo_mysql
-          coverage: pcov
 
       - name: Install Packages in the temporary container
         working-directory: ./
@@ -24,8 +23,4 @@ jobs:
 
       - name: Run tests with PHP 8.1
         working-directory: ./
-        run: |
-          export CODECOVERAGE=1
-          steps.run.shell:
-            run: |
-              vendor/bin/phpunit -v tests
+        run: vendor/bin/phpunit -v tests
