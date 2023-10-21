@@ -2,6 +2,8 @@
 
 A Simple Token Authentication Plugin for CakePHP 4 REST API-s.
 
+For CakePHP 5 version see [https://github.com/rrd108/api-token-authenticator/tree/cakephp-5]
+
 ## Configuration
 
 ### `Users` table
@@ -58,7 +60,7 @@ Than you can use this `token` to authenticate yourself for accessing urls what r
 Including the plugin is pretty much as with every other CakePHP plugin:
 
 ```bash
-composer require rrd108/api-token-authenticator
+composer require rrd108/api-token-authenticator:^0.4
 ```
 
 Then, to load the plugin either run the following command:
