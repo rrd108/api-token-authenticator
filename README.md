@@ -2,7 +2,7 @@
 
 A Simple Token Authentication Plugin for CakePHP 4 REST API-s.
 
-For CakePHP 5 version see [https://github.com/rrd108/api-token-authenticator/tree/cakephp-5]
+For CakePHP 5 version see [rrd108/api-token-authenticator](https://github.com/rrd108/api-token-authenticator/)
 
 ## Configuration
 
