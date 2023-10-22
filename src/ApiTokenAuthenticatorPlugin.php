@@ -10,8 +10,8 @@ use Cake\Console\CommandCollection;
 use Authentication\AuthenticationService;
 use Cake\Core\PluginApplicationInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Authentication\Identifier\AbstractIdentifier;
 use Authentication\AuthenticationServiceInterface;
-use Authentication\Identifier\IdentifierInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Authentication\AuthenticationServiceProviderInterface;
 use ApiTokenAuthenticator\Authentication\Authenticator\ProvisoryTokenAuthenticator;
@@ -67,8 +67,8 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
         $options = Configure::read('ApiTokenAuthenticator');
 
         $fields = [
-            IdentifierInterface::CREDENTIAL_USERNAME => $options['fields']['username'],
-            IdentifierInterface::CREDENTIAL_PASSWORD => $options['fields']['password']
+            AbstractIdentifier::CREDENTIAL_USERNAME => $options['fields']['username'],
+            AbstractIdentifier::CREDENTIAL_PASSWORD => $options['fields']['password']
         ];
 
         $service->loadAuthenticator(ProvisoryTokenAuthenticator::class, [
