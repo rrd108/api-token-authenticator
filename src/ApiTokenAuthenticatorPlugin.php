@@ -83,6 +83,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
                 'plugin' => null,
                 'controller' => $options['login']['controller'],
                 'action' => $options['login']['action'],
+                '_ext' => $options['login']['_ext']
             ]),
         ]);
 
