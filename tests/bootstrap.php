@@ -22,12 +22,12 @@ $root = $findRoot(__FILE__);
 unset($findRoot);
 chdir($root);
 
-require_once 'vendor/cakephp/cakephp/src/functions.php';
-require_once 'vendor/autoload.php';
+//require_once 'vendor/cakephp/cakephp/src/functions.php';
+//require_once 'vendor/autoload.php';
 
 define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
-define('APP', ROOT . 'App' . DS);
-define('TMP', sys_get_temp_dir() . DS);
+// define('APP', ROOT . 'App' . DS);
+// define('TMP', sys_get_temp_dir() . DS);
 define('CONFIG', ROOT . DS . 'config' . DS);
 
 Configure::write('debug', true);
@@ -57,7 +57,6 @@ Plugin::getCollection()->add(new \Authentication\Plugin());
 $_SERVER['PHP_SELF'] = '/';
 
 Configure::load('ApiTokenAuthenticator.apiTokenAuthenticator');
-
 
 use Cake\TestSuite\Fixture\SchemaLoader;
 // Load a schema dump file.
