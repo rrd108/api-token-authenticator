@@ -69,15 +69,18 @@ Then, to load the plugin either run the following command:
 bin/cake plugin load ApiTokenAuthenticator
 ```
 
-or manually add the following line to your app's `src/Application.php` file's `bootstrap()` function:
+or manually add the following line to your app's `config/plgins.php`:
 
 ```php
-$this->addPlugin('ApiTokenAuthenticator');
+return [
+  // other plugins
+  'ApiTokenAuthenticator' => [],
+];
 ```
 
 ### 2. Disable CSRF protection
 
-You should comment out `CsrfProtectionMiddleware`.
+You should comment out (or delete) `CsrfProtectionMiddleware` in your `/src/Application.php` file's `middleware()` method.
 
 ### 3. Load the plugin's components
 
@@ -86,9 +89,19 @@ At your `AppController.php` file's `initialize()` function you should include th
 ```php
 public function initialize(): void
 {
-    parent::initialize();
-    $this->loadComponent('RequestHandler');
-    $this->loadComponent('Authentication.Authentication');
+  parent::initialize();
+  $this->loadComponent('Authentication.Authentication');
+}
+```
+
+And add JSON view support.
+
+```php
+use Cake\View\JsonView;
+
+public function viewClasses(): array
+{
+  return [JsonView::class];
 }
 ```
 
@@ -99,18 +112,26 @@ Update your `src/Model/Entity/User.php` file adding the following.
 ```php
 use Authentication\PasswordHasher\DefaultPasswordHasher;
 protected function _setPassword(string $password)
-  {
-    $hasher = new DefaultPasswordHasher();
-    return $hasher->hash($password);
-  }
+{
+  $hasher = new DefaultPasswordHasher();
+  return $hasher->hash($password);
+}
 ```
+
+Do not forget to remove the `token` field from the `$_hidden` array.
 
 ### 5. Set extensions for `routes`
 
-As you probably will use JSON urls, do not forget to add this lien to your `routes.php` file.
+As you probably will use JSON urls, do not forget to add this line to your `config/routes.php` file.
 
 ```php
-$builder->setExtensions(['json']);
+$routes->scope('/', function (RouteBuilder $builder): void {
+  // other routes
+  $builder->setExtensions(['json']);
+  $builder->resources('Users');
+
+  $builder->fallbacks();
+});
 ```
 
 That's it. It should be up and running.
@@ -124,16 +145,22 @@ Login method is not added automatically, you should implement it. Here is an exa
 ```php
 public function login()
 {
-    $result = $this->Authentication->getResult();
-    if ($result->isValid()) {
-        $userIdentity = $this->Authentication->getIdentity();
-        $user = [
-            'id' => $userIdentity->id,
-            'token' => $userIdentity->token
-        ];
-        $this->set(compact('user'));
-        $this->viewBuilder()->setOption('serialize', ['user']);
-    }
+  $result = $this->Authentication->getResult();
+  if ($result->isValid()) {
+    $user = $this->Authentication->getIdentity()->getOriginalData();
+    $this->set(compact('user'));
+    $this->viewBuilder()->setOption('serialize', ['user']);
+  }
+}
+```
+
+The `login` method should be added to the list of actions that are allowed to be accessed without authentication.
+
+```php
+public function beforeFilter(\Cake\Event\EventInterface $event)
+{
+  parent::beforeFilter($event);
+  $this->Authentication->allowUnauthenticated(['login']);
 }
 ```
 
@@ -142,26 +169,24 @@ public function login()
 ```php
 public function login()
 {
-    $result = $this->Authentication->getResult();
-    if ($result->isValid()) {
-        $userIdentity = $this->Authentication->getIdentity();
+  $result = $this->Authentication->getResult();
+  if ($result->isValid()) {
+    $user = $this->Authentication->getIdentity()->getOriginalData();
+    $user->token = $this->generateToken();
+    $user = $this->Users->save($user);
+    $user = $this->Users->get($user->id);
 
-        $user = $userIdentity->getOriginalData();
-        $user->token = $this->generateToken();
-        $user = $this->Users->save($user);
-        $user = $this->Users->get($user->id);
-
-        $this->set(compact('user'));
-        $this->viewBuilder()->setOption('serialize', ['user']);
-    }
-    // if login failed you can throw an exception, suggested: rrd108/cakephp-json-api-exception
+    $this->set(compact('user'));
+    $this->viewBuilder()->setOption('serialize', ['user']);
+  }
+  // if login failed you can throw an exception, suggested: rrd108/cakephp-json-api-exception
 }
 
 private function generateToken(int $length = 36)
 {
-    $random = base64_encode(Security::randomBytes($length));
-    $cleaned = preg_replace('/[^A-Za-z0-9]/', '', $random);
-    return $cleaned;
+  $random = base64_encode(Security::randomBytes($length));
+  $cleaned = preg_replace('/[^A-Za-z0-9]/', '', $random);
+  return $cleaned;
 }
 ```
 
@@ -201,19 +226,18 @@ public function login()
 {
   $result = $this->Authentication->getResult();
   if ($result->isValid()) {
-      $userIdentity = $this->Authentication->getIdentity();
-      $user = $userIdentity->getOriginalData();
-      list($user->token, $user->token_expiration) = $this->generateToken();
-      $user = $this->Users->save($user);
+    $user = $this->Authentication->getIdentity()->getOriginalData();
+    list($user->token, $user->token_expiration) = $this->generateToken();
+    $user = $this->Users->save($user);
 
-      $this->set(compact('user'));
-      $this->viewBuilder()->setOption('serialize', ['user']);
+    $this->set(compact('user'));
+    $this->viewBuilder()->setOption('serialize', ['user']);
 
-      // delete all expired tokens
-      $this->Users->updateAll(
-          ['token' => null, 'token_expiration' => null],
-          ['token_expiration <' => Chronos::now()]
-      );
+    // delete all expired tokens
+    $this->Users->updateAll(
+      ['token' => null, 'token_expiration' => null],
+      ['token_expiration <' => Chronos::now()]
+    );
   }
 }
 
@@ -230,7 +254,7 @@ private function generateToken(int $length = 36, string $expiration = '+6 hours'
 If you want to let the users to access a resource without authentication you should state it in the controller's `beforeFilter()` method. The `login`, `register` methods are good candidates to allow unauthenticated access.
 
 ```php
-// For example in UsersController.php
+// in UsersController.php
 public function beforeFilter(\Cake\Event\EventInterface $event)
 {
   parent::beforeFilter($event);
@@ -238,47 +262,4 @@ public function beforeFilter(\Cake\Event\EventInterface $event)
 }
 ```
 
-This will allow users to access `/users.json` url without authentication.
-
-# Migration
-
-## Migration form version 0.1
-
-Version 0.3 and 0.2 is totally backward compatible with version 0.1
-
-By default, now we use CakePHP's default password hashing instead of `md5` as it was less secure.
-Inspite of this your current users will be able to login with their current password, but if you want to use the more secure hasing for new users and keep old users as they are, you have to do the following.
-
-1. Make sure in your database the password field is at least 60 characters long.
-
-2. Update your `src/Model/Entity/User.php` file adding the following. By this whenever and old user with and `md5` hashed password updates his/her password it will be hashed with the default hashing algorythm.
-
-```php
-use Authentication\PasswordHasher\DefaultPasswordHasher;
-protected function _setPassword(string $password)
-  {
-    $hasher = new DefaultPasswordHasher();
-    return $hasher->hash($password);
-  }
-```
-
-3. In your `config/apiTokenAuthenticator.php` file you should define this passwordHasher array.
-
-```php
-return [
-  'ApiTokenAuthenticator' => [
-    // any other custom settings
-    // ...
-      'passwordHasher' => [
-        'className' => 'Authentication.Fallback',
-        'hashers' => [
-          'Authentication.Default', [
-            'className' => 'Authentication.Legacy',
-            'hashType' => 'md5',
-            'salt' => false
-          ],
-        ]
-    ]
-  ]
-];
-```
+This will allow users to access `/users/login.json` and `/users.json` url without authentication.
