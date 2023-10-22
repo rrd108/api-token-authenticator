@@ -26,6 +26,16 @@ class UsersControllerTest extends TestCase
 
     public function testIndex(): void
     {
+        $this->get('/users.json');
+        $this->assertResponseCode(401);
+
+        $this->configRequest([
+            'headers' => ['Token' => 'FalseToken']
+        ]);
+        $this->get('/users.json');
+        $this->assertResponseCode(401);
+
+
         $this->configRequest([
             'headers' => ['Token' => 'token-1']
         ]);
