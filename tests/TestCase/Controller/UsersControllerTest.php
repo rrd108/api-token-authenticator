@@ -15,6 +15,15 @@ class UsersControllerTest extends TestCase
         'plugin.ApiTokenAuthenticator.Users',
     ];
 
+    public function testLogin(): void
+    {
+        $this->post('/users/login.json', ['email' => 'rrd', 'password' => '123']);
+        $this->assertResponseOk();
+        $this->assertHeader('Content-Type', 'application/json');
+        $user =  $this->viewVariable('user');
+        $this->assertEquals('token-1', $user->token);
+    }
+
     public function testIndex(): void
     {
         $this->configRequest([
@@ -24,15 +33,6 @@ class UsersControllerTest extends TestCase
         $this->assertResponseOk();
         $this->assertHeader('Content-Type', 'application/json');
         $users =  $this->viewVariable('users');
-        $this->assertEquals('token-1', $users->toArray()[0]->token);
+        $this->assertEquals('rrd', $users->toArray()[0]->email);
     }
-
-    // public function testLogin(): void
-    // {
-    //     $this->post('/users/login.json', ['email' => 'rrd', 'password' => 'webmania']);
-    //     $this->assertResponseOk();
-    //     $this->assertHeader('Content-Type', 'application/json');
-    //     $user =  $this->viewVariable('user');
-    //     $this->assertEquals('token-1', $user->token);
-    // }
 }

@@ -10,7 +10,7 @@ class UsersFixture extends TestFixture
         [
             'id' => 1,
             'email' => 'rrd',
-            'password' => 'webmania',
+            'password' => '$2y$10$ZVRmoo2amhyBLFqz/Qoo8OsqbGDXs95AdQM/gmLSJ2BghRSWdmRDS',   // 123
             'token' => 'token-1',
             'created' => '2023-10-21 12:12:12',
             'modified' => '2023-10-21 12:12:12',
