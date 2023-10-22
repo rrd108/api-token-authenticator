@@ -12,8 +12,8 @@ return [
         // login controller and action
         'login' => [
             'controller' => 'Users',
-            'action' => 'login.json'
-
+            'action' => 'login',
+            '_ext' => 'json'
         ],
         // password hasher 
         'passwordHasher' => 'default',
