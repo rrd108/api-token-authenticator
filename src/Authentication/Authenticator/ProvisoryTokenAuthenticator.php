@@ -2,8 +2,8 @@
 
 namespace ApiTokenAuthenticator\Authentication\Authenticator;
 
+use Cake\I18n\DateTime;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
 use Authentication\Authenticator\Result;
 use Psr\Http\Message\ServerRequestInterface;
 use Authentication\Authenticator\ResultInterface;
@@ -21,7 +21,7 @@ class ProvisoryTokenAuthenticator extends TokenAuthenticator
 
         $options = Configure::read('ApiTokenAuthenticator');
 
-        if (isset($options['tokenExpiration']) && $result->getData()[$options['tokenExpiration']] < FrozenTime::now()) {
+        if (isset($options['tokenExpiration']) && $result->getData()[$options['tokenExpiration']] < DateTime::now()) {
             return new Result(null, 'TOKEN_EXPIRED');
         }
 
