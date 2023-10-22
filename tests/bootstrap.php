@@ -50,7 +50,7 @@ ConnectionManager::setConfig('test', [
 ]);
 
 Router::reload();
-Security::setSalt('YJfIxfs2guVoUubWDYhG93b0qyJfIxfs2guwvniR2G0FgaC9mi');
+//Security::setSalt('rrd');
 
 Plugin::getCollection()->add(new \Authentication\Plugin());
 
