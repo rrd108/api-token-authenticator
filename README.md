@@ -94,7 +94,7 @@ public function initialize(): void
 }
 ```
 
-And add JSON view support.
+And add JSON view support to `AppController.php`.
 
 ```php
 use Cake\View\JsonView;
@@ -133,6 +133,24 @@ $routes->scope('/', function (RouteBuilder $builder): void {
   $builder->fallbacks();
 });
 ```
+
+### 5. Set JSON response in controllers
+
+In your controllers you should set the JSON response type.
+
+```php
+// for example in UsersController.php
+public function index()
+{
+  $query = $this->Users->find();
+  $users = $this->paginate($query);
+
+  $this->set(compact('users'));
+  $this->viewBuilder()->setOption('serialize', ['users']);
+}
+```
+
+As CakePHP response use content type negotiation it is important to add the `Accept: application/json` header to your requests.
 
 That's it. It should be up and running.
 
