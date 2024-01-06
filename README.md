@@ -204,7 +204,7 @@ private function generateToken(int $length = 36)
 {
   $random = base64_encode(Security::randomBytes($length));
   $cleaned = preg_replace('/[^A-Za-z0-9]/', '', $random);
-  return $cleaned;
+  return substr($cleaned, 0, $length);
 }
 ```
 
