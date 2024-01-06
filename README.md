@@ -69,7 +69,7 @@ Then, to load the plugin either run the following command:
 bin/cake plugin load ApiTokenAuthenticator
 ```
 
-or manually add the following line to your app's `config/plgins.php`:
+or manually add the following line to your app's `config/plugins.php`:
 
 ```php
 return [
