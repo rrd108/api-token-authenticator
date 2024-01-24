@@ -6,6 +6,8 @@ For CakePHP 4 version see [rrd108/api-token-authenticator](https://github.com/rr
 
 For a REST API you may want to use a cors plugin like [rrd108/cakephp-cors](https://github.com/rrd108/cakephp-cors) and a json api exception plugin like [rrd108/cakephp-json-api-exception](https://github.com/rrd108/cakephp-json-api-exception).
 
+If you use vuejs as your frontend you may wnat to bake your vue components with [rrd108/vue-bake](https://github.com/rrd108/vue-bake).
+
 ## Configuration
 
 ### `Users` table

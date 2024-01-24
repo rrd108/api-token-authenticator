@@ -30,6 +30,7 @@
   },
   "suggest": {
     "rrd108/cakephp-cors": "Activate CORS domain in your application with Middleware",
-    "rrd108/cakephp-json-api-exception": "Make your CakePHP JSON REST API response more descriptive on errors"
+    "rrd108/cakephp-json-api-exception": "Make your CakePHP JSON REST API response more descriptive on errors",
+    "rrd108/vue-bake": "Bake VueJs components from CakePHP models"
   }
 }
