@@ -4,6 +4,8 @@ A Simple Token Authentication Plugin for CakePHP 5 REST API-s.
 
 For CakePHP 4 version see [rrd108/api-token-authenticator](https://github.com/rrd108/api-token-authenticator/tree/cakephp-4)
 
+For a REST API you may want to use a cors plugin like [rrd108/cakephp-cors](https://github.com/rrd108/cakephp-cors) and a json api exception plugin like [rrd108/cakephp-json-api-exception](https://github.com/rrd108/cakephp-json-api-exception).
+
 ## Configuration
 
 ### `Users` table
