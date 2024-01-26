@@ -2,25 +2,72 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - '*'
+  workflow_dispatch: # allows you to manually dispatch a workflow run via Github UI
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
 
 jobs:
-  testsuite_php_8_1:
-    runs-on: ubuntu-latest
+  testsuite-linux:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [ '8.1', '8.2', '8.3' ]
+        dependencies: ['highest']
+        include:
+          - php-version: '8.1'
+            dependencies: 'lowest'
+          - php-version: '8.3'
+            dependencies: 'highest'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup PHP 8.1 Environment
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
-          extensions: intl, mbstring, simplexml, pdo, pdo_mysql
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl
+          ini-values: zend.assertions=1
+          coverage: pcov
 
-      - name: Install Packages in the temporary container
-        working-directory: ./
-        run: composer install
+      - name: Composer install
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: ${{ matrix.composer-options }}
 
-      - name: Run tests with PHP 8.1
-        working-directory: ./
-        run: vendor/bin/phpunit tests
+      - name: Run PHPUnit
+        run: |
+          if [[ ${{ matrix.php-version }} == '8.1' ]]; then
+            vendor/bin/phpunit --coverage-clover=coverage.xml
+          else
+            vendor/bin/phpunit
+          fi
+
+  cs:
+    name: Coding Standard
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl
+          coverage: none
+          tools: cs2pr
+
+      - name: Composer install
+        uses: ramsey/composer-install@v2
+
+      - name: Run phpcs
+        run: vendor/bin/phpcs --report=checkstyle src/ tests/ | cs2pr
