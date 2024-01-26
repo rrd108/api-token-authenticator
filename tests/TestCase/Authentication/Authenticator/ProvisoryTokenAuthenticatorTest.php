@@ -21,11 +21,13 @@ class ProvisoryTokenAuthenticatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->identifiers = new IdentifierCollection([
+        $this->identifiers = new IdentifierCollection(
+            [
             'Authentication.Token' => [
                 'header' => 'Token',
             ],
-        ]);
+            ]
+        );
         $this->request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],

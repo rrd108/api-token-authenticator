@@ -31,23 +31,27 @@ define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
 define('CONFIG', ROOT . DS . 'config' . DS);
 
 Configure::write('debug', true);
-Configure::write('App', [
+Configure::write(
+    'App', [
     'namespace' => 'TestApp',
     'encoding' => 'UTF-8',
     'paths' => [
         'plugins' => [ROOT . 'Plugin' . DS],
         'templates' => [ROOT . 'templates' . DS],
     ],
-]);
+    ]
+);
 
-ConnectionManager::setConfig('test', [
+ConnectionManager::setConfig(
+    'test', [
     'className' => 'Cake\Database\Connection',
     'driver' => 'Cake\Database\Driver\Sqlite',
     'database' => ':memory:',
     'encoding' => 'utf8',
     'timezone' => 'UTC',
     'quoteIdentifiers' => false,
-]);
+    ]
+);
 
 Router::reload();
 //Security::setSalt('rrd');

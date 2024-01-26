@@ -18,11 +18,13 @@ class Application extends BaseApplication
     public function routes(RouteBuilder $routes): void
     {
         $routes->setRouteClass(DashedRoute::class);
-        $routes->scope('/', function (RouteBuilder $builder): void {
-            $builder->setExtensions(['json']);
-            $builder->resources('Users');
-            $builder->fallbacks();
-        });
+        $routes->scope(
+            '/', function (RouteBuilder $builder): void {
+                $builder->setExtensions(['json']);
+                $builder->resources('Users');
+                $builder->fallbacks();
+            }
+        );
     }
 
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue

@@ -57,7 +57,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
     /**
      * Returns a service provider instance.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @param  \Psr\Http\Message\ServerRequestInterface $request Request
      * @return \Authentication\AuthenticationServiceInterface
      */
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
@@ -71,21 +71,27 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
             AbstractIdentifier::CREDENTIAL_PASSWORD => $options['fields']['password']
         ];
 
-        $service->loadAuthenticator(ProvisoryTokenAuthenticator::class, [
+        $service->loadAuthenticator(
+            ProvisoryTokenAuthenticator::class, [
             'header' => $options['header'],
-        ]);
+            ]
+        );
         $service->loadIdentifier('Authentication.Token');
 
-        $service->loadAuthenticator('Authentication.Form', [
+        $service->loadAuthenticator(
+            'Authentication.Form', [
             'fields' => $fields,
-            'loginUrl' => Router::url([
+            'loginUrl' => Router::url(
+                [
                 'prefix' => false,
                 'plugin' => null,
                 'controller' => $options['login']['controller'],
                 'action' => $options['login']['action'],
                 '_ext' => $options['login']['_ext']
-            ]),
-        ]);
+                ]
+            ),
+            ]
+        );
 
         if ($options['passwordHasher'] == 'default') {
             $service->loadIdentifier('Authentication.Password', compact('fields'));

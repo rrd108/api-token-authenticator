@@ -29,16 +29,20 @@ class UsersControllerTest extends TestCase
         $this->get('/users.json');
         $this->assertResponseCode(401);
 
-        $this->configRequest([
+        $this->configRequest(
+            [
             'headers' => ['Token' => 'FalseToken']
-        ]);
+            ]
+        );
         $this->get('/users.json');
         $this->assertResponseCode(401);
 
 
-        $this->configRequest([
+        $this->configRequest(
+            [
             'headers' => ['Token' => 'token-1']
-        ]);
+            ]
+        );
         $this->get('/users.json');
         $this->assertResponseOk();
         $this->assertHeader('Content-Type', 'application/json');
