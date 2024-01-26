@@ -65,3 +65,4 @@ Configure::load('ApiTokenAuthenticator.apiTokenAuthenticator');
 
 use Cake\TestSuite\Fixture\SchemaLoader;
 (new SchemaLoader())->loadSqlFiles('tests/schema.sql', 'test');
+
