@@ -1,16 +1,21 @@
 <?php
+declare(strict_types=1);
 
 namespace ApiTokenAuthenticator\Authentication\Authenticator;
 
-use Cake\I18n\DateTime;
-use Cake\Core\Configure;
 use Authentication\Authenticator\Result;
-use Psr\Http\Message\ServerRequestInterface;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\TokenAuthenticator;
+use Cake\Core\Configure;
+use Cake\I18n\DateTime;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ProvisoryTokenAuthenticator extends TokenAuthenticator
 {
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @return \Authentication\Authenticator\ResultInterface
+     */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         $result = parent::authenticate($request);

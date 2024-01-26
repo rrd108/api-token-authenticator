@@ -1,12 +1,13 @@
 <?php
-
 declare(strict_types=1);
 
 namespace TestApp\Controller;
 
+use Cake\Event\EventInterface;
+
 class UsersController extends AppController
 {
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
         $this->Authentication->allowUnauthenticated(['login']);

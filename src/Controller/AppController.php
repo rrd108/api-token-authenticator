@@ -1,12 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace ApiTokenAuthenticator\Controller;
 
-use Cake\View\JsonView;
 use App\Controller\AppController as BaseController;
+use Cake\View\JsonView;
 
 class AppController extends BaseController
 {
+    /**
+     * @inheritDoc
+     */
     public function initialize(): void
     {
         parent::initialize();
@@ -14,6 +18,9 @@ class AppController extends BaseController
         $this->loadComponent('Authentication.Authentication');
     }
 
+    /**
+     * @inheritDoc
+     */
     public function viewClasses(): array
     {
         // TODO do we need this here or just in the application?

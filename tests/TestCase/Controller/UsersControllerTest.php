@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace TestApp\Test\TestCase\Controller;
@@ -20,7 +19,7 @@ class UsersControllerTest extends TestCase
         $this->post('/users/login.json', ['email' => 'rrd', 'password' => '123']);
         $this->assertResponseOk();
         $this->assertHeader('Content-Type', 'application/json');
-        $user =  $this->viewVariable('user');
+        $user = $this->viewVariable('user');
         $this->assertEquals('token-1', $user->token);
     }
 
@@ -31,22 +30,21 @@ class UsersControllerTest extends TestCase
 
         $this->configRequest(
             [
-            'headers' => ['Token' => 'FalseToken']
+                'headers' => ['Token' => 'FalseToken'],
             ]
         );
         $this->get('/users.json');
         $this->assertResponseCode(401);
 
-
         $this->configRequest(
             [
-            'headers' => ['Token' => 'token-1']
+                'headers' => ['Token' => 'token-1'],
             ]
         );
         $this->get('/users.json');
         $this->assertResponseOk();
         $this->assertHeader('Content-Type', 'application/json');
-        $users =  $this->viewVariable('users');
+        $users = $this->viewVariable('users');
         $this->assertEquals('rrd', $users->toArray()[0]->email);
     }
 }

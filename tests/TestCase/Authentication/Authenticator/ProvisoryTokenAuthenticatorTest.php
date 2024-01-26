@@ -1,13 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace ApiTokenAuthenticator\Test\Authentication\Authenticator;
 
-use Cake\Core\Configure;
-use Cake\TestSuite\TestCase;
-use Cake\Http\ServerRequestFactory;
+use ApiTokenAuthenticator\Authentication\Authenticator\ProvisoryTokenAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
-use ApiTokenAuthenticator\Authentication\Authenticator\ProvisoryTokenAuthenticator;
+use Cake\Core\Configure;
+use Cake\Http\ServerRequestFactory;
+use Cake\TestSuite\TestCase;
 
 class ProvisoryTokenAuthenticatorTest extends TestCase
 {

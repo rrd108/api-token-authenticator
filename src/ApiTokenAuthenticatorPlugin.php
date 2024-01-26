@@ -1,24 +1,29 @@
 <?php
+declare(strict_types=1);
 
 namespace ApiTokenAuthenticator;
 
-use Cake\Core\Configure;
-use Cake\Routing\Router;
-use Cake\Core\BasePlugin;
-use Cake\Http\MiddlewareQueue;
-use Cake\Console\CommandCollection;
-use Authentication\AuthenticationService;
-use Cake\Core\PluginApplicationInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Authentication\Identifier\AbstractIdentifier;
-use Authentication\AuthenticationServiceInterface;
-use Authentication\Middleware\AuthenticationMiddleware;
-use Authentication\AuthenticationServiceProviderInterface;
 use ApiTokenAuthenticator\Authentication\Authenticator\ProvisoryTokenAuthenticator;
+use Authentication\AuthenticationService;
+use Authentication\AuthenticationServiceInterface;
+use Authentication\AuthenticationServiceProviderInterface;
+use Authentication\Identifier\AbstractIdentifier;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Console\CommandCollection;
+use Cake\Core\BasePlugin;
+use Cake\Core\Configure;
+use Cake\Core\PluginApplicationInterface;
+use Cake\Http\MiddlewareQueue;
+use Cake\Routing\Router;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationServiceProviderInterface
 {
     // TODO disable CSRF middleware - now it is manually in Application.php
+
+    /**
+     * @inheritDoc
+     */
     public function middleware(MiddlewareQueue $middleware): MiddlewareQueue
     {
         // Add middleware here.
@@ -32,6 +37,9 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
         return $middleware;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function console(CommandCollection $commands): CommandCollection
     {
         // Add console commands here.
@@ -40,6 +48,9 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
         return $commands;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function bootstrap(PluginApplicationInterface $app): void
     {
         // Add constants, load configuration defaults.
@@ -47,6 +58,9 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
         parent::bootstrap($app);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function routes($routes): void
     {
         // Add routes.
@@ -57,7 +71,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
     /**
      * Returns a service provider instance.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request Request
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request
      * @return \Authentication\AuthenticationServiceInterface
      */
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
@@ -68,28 +82,30 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
 
         $fields = [
             AbstractIdentifier::CREDENTIAL_USERNAME => $options['fields']['username'],
-            AbstractIdentifier::CREDENTIAL_PASSWORD => $options['fields']['password']
+            AbstractIdentifier::CREDENTIAL_PASSWORD => $options['fields']['password'],
         ];
 
         $service->loadAuthenticator(
-            ProvisoryTokenAuthenticator::class, [
-            'header' => $options['header'],
+            ProvisoryTokenAuthenticator::class,
+            [
+                'header' => $options['header'],
             ]
         );
         $service->loadIdentifier('Authentication.Token');
 
         $service->loadAuthenticator(
-            'Authentication.Form', [
-            'fields' => $fields,
-            'loginUrl' => Router::url(
-                [
-                'prefix' => false,
-                'plugin' => null,
-                'controller' => $options['login']['controller'],
-                'action' => $options['login']['action'],
-                '_ext' => $options['login']['_ext']
-                ]
-            ),
+            'Authentication.Form',
+            [
+                'fields' => $fields,
+                'loginUrl' => Router::url(
+                    [
+                        'prefix' => false,
+                        'plugin' => null,
+                        'controller' => $options['login']['controller'],
+                        'action' => $options['login']['action'],
+                        '_ext' => $options['login']['_ext'],
+                    ]
+                ),
             ]
         );
 
@@ -101,7 +117,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
                 'Authentication.Password',
                 [
                     'fields' => $fields,
-                    'passwordHasher' => $options['passwordHasher']
+                    'passwordHasher' => $options['passwordHasher'],
                 ]
             );
         }

@@ -40,7 +40,8 @@
     }
   },
   "scripts": {
-    "cs-check": "phpcs --colors -p src/ tests/",
-    "cs-fix": "phpcbf --colors -p src/ tests/"
+    "test": "phpunit",
+    "cs-check": "phpcs --colors -p ./src ./tests",
+    "cs-fix": "phpcbf --colors -p ./src ./tests"
   }
 }
