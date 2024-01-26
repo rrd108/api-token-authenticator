@@ -1,7 +1,7 @@
 <?php
-
 declare(strict_types=1);
 
+use Authentication\Plugin as AuthPlugin;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
@@ -57,13 +57,11 @@ ConnectionManager::setConfig(
 Router::reload();
 //Security::setSalt('rrd');
 
-Plugin::getCollection()->add(new \Authentication\Plugin());
+Plugin::getCollection()->add(new AuthPlugin());
 
 $_SERVER['PHP_SELF'] = '/';
 
 Configure::load('ApiTokenAuthenticator.apiTokenAuthenticator');
 
 use Cake\TestSuite\Fixture\SchemaLoader;
-// Load a schema dump file.
-
 (new SchemaLoader())->loadSqlFiles('tests/schema.sql', 'test');
