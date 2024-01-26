@@ -6,6 +6,7 @@ use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Routing\Router;
+use Cake\TestSuite\Fixture\SchemaLoader;
 
 $findRoot = function ($root) {
     do {
@@ -63,6 +64,4 @@ $_SERVER['PHP_SELF'] = '/';
 
 Configure::load('ApiTokenAuthenticator.apiTokenAuthenticator');
 
-use Cake\TestSuite\Fixture\SchemaLoader;
 (new SchemaLoader())->loadSqlFiles('tests/schema.sql', 'test');
-
