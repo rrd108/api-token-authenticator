@@ -75,4 +75,21 @@ class ProvisoryTokenAuthenticatorTest extends TestCase
         $result = $tokenAuth->authenticate($requestWithHeader);
         $this->assertSame('TOKEN_EXPIRED', $result->getStatus());
     }
+
+    public function testAuthenticateWithBearerToken()
+    {
+        $options = Configure::read('ApiTokenAuthenticator');
+        $extraOptions = ['header' => 'Authorization', 'tokenPrefix' => 'Bearer'];
+        Configure::write('ApiTokenAuthenticator', $extraOptions + $options);
+        $tokenAuth = new ProvisoryTokenAuthenticator($this->identifiers, $extraOptions + $options);
+
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'rrd', 'password' => 'webmania']
+        );
+        $requestWithHeader = $request->withAddedHeader('Authorization', 'Bearer token-1');
+        $result = $tokenAuth->authenticate($requestWithHeader);
+        $this->assertSame(Result::SUCCESS, $result->getStatus());
+    }
 }

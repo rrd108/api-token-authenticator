@@ -31,6 +31,20 @@ return [
 ];
 ```
 
+#### Authorization with Bearer token
+
+If you want to use the `Authorization` header with `Bearer` token, you should set the `header` key to `Authorization` and the `prefix` key to `Bearer` in your `config/apiTokenAuthenticator.php` file.
+
+```php
+<?php
+return [
+  'ApiTokenAuthenticator' => [
+    'header' => 'Authorization',
+    'prefix' => 'Bearer',
+  ]
+];
+```
+
 ## Authentication
 
 The plugin authentication workflow is the following.
@@ -39,8 +53,8 @@ At your client appliacation you should send a POST request to `/users/login.json
 
 ```json
 {
-  "email": "rrd@webmania.cc",
-  "password": "rrd"
+    "email": "rrd@webmania.cc",
+    "password": "rrd"
 }
 ```
 
@@ -48,10 +62,10 @@ If the login was successful than you will get a response like this.
 
 ```json
 {
-  "user": {
-    "id": 1,
-    "token": "yourSecretTokenComingFromTheDatabase"
-  }
+    "user": {
+        "id": 1,
+        "token": "yourSecretTokenComingFromTheDatabase"
+    }
 }
 ```
 

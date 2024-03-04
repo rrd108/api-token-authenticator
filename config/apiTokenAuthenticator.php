@@ -7,8 +7,13 @@ return [
             'username' => 'email',
             'password' => 'password'
         ],
+
         // name of the header for the token
         'header' => 'Token',
+        // for Bearer Athorization use this instead of the default
+        //'header' => 'Authorization
+        //'tokenPrefix' => 'Bearer',
+
         // login controller and action
         'login' => [
             'controller' => 'Users',
