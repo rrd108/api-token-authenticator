@@ -89,9 +89,18 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
             ProvisoryTokenAuthenticator::class,
             [
                 'header' => $options['header'],
+                'identifier' => 'Authentication.Token',
             ]
         );
-        $service->loadIdentifier('Authentication.Token');
+
+        $identifierConfig = [
+            'identifier' => 'Authentication.Password',
+            'fields' => $fields,
+        ];
+
+        if (is_array($options['passwordHasher'])) {
+            $identifierConfig['passwordHasher'] = $options['passwordHasher'];
+        }
 
         $service->loadAuthenticator(
             'Authentication.Form',
@@ -106,21 +115,8 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
                         '_ext' => $options['login']['_ext'],
                     ]
                 ),
-            ]
+            ] + $identifierConfig
         );
-
-        if ($options['passwordHasher'] == 'default') {
-            $service->loadIdentifier('Authentication.Password', compact('fields'));
-        }
-        if (is_array($options['passwordHasher'])) {
-            $service->loadIdentifier(
-                'Authentication.Password',
-                [
-                    'fields' => $fields,
-                    'passwordHasher' => $options['passwordHasher'],
-                ]
-            );
-        }
 
         return $service;
     }
