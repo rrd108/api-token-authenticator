@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
-<ruleset name="CakePHP Sentry">
-  <config name="installed_paths" value="../../cakephp/cakephp-codesniffer" />
+<ruleset name="API Token Authenticator">
+  <description>Coding standard for API Token Authenticator plugin</description>
 
-  <rule ref="CakePHP" />
+  <!-- Use PSR12 as base -->
+  <rule ref="PSR12">
+    <!-- Allow long lines for readability -->
+    <exclude name="Generic.Files.LineLength"/>
+  </rule>
+
+  <!-- Check src and tests directories -->
+  <file>src</file>
+  <file>tests</file>
+
+  <!-- Exclude side effects warning for test bootstrap files -->
+  <rule ref="PSR1.Files.SideEffects">
+    <exclude-pattern>tests/bootstrap.php</exclude-pattern>
+  </rule>
+
+  <!-- Show progress -->
+  <arg value="p"/>
 </ruleset>

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TestApp\Test\TestCase;
@@ -15,7 +16,7 @@ class ApiTokenAuthenticatorPluginTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        
+
         // Set up a route for the login URL so Router::url() doesn't fail
         Router::createRouteBuilder('/')->scope('/', function (RouteBuilder $routes) {
             $routes->connect('/users/login', [
@@ -46,10 +47,10 @@ class ApiTokenAuthenticatorPluginTest extends TestCase
 
         $plugin = new ApiTokenAuthenticatorPlugin();
         $request = ServerRequestFactory::fromGlobals();
-        
+
         // This should trigger the deprecation warnings for loadIdentifier()
         $service = $plugin->getAuthenticationService($request);
-        
+
         $this->assertInstanceOf(
             'Authentication\AuthenticationServiceInterface',
             $service
