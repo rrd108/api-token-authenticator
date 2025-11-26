@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ApiTokenAuthenticator;
@@ -87,9 +88,10 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
             AbstractIdentifier::CREDENTIAL_PASSWORD => $options['fields']['password'],
         ];
 
-        // Load identifiers on the service
-        // @phpstan-ignore-next-line
-        $service->loadIdentifier('Authentication.Token');
+        // Define identifier configurations
+        $tokenIdentifier = [
+            'Authentication.Token' => [],
+        ];
 
         $passwordIdentifierConfig = [
             'fields' => $fields,
@@ -97,14 +99,16 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
         if (is_array($options['passwordHasher'])) {
             $passwordIdentifierConfig['passwordHasher'] = $options['passwordHasher'];
         }
-        // @phpstan-ignore-next-line
-        $service->loadIdentifier('Authentication.Password', $passwordIdentifierConfig);
+        $passwordIdentifier = [
+            'Authentication.Password' => $passwordIdentifierConfig,
+        ];
 
         // ProvisoryTokenAuthenticator - references Token identifier
         $service->loadAuthenticator(
             ProvisoryTokenAuthenticator::class,
             [
                 'header' => $options['header'],
+                'identifier' => $tokenIdentifier,
             ]
         );
 
@@ -122,6 +126,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
                         '_ext' => $options['login']['_ext'],
                     ]
                 ),
+                'identifier' => $passwordIdentifier,
             ]
         );
 
