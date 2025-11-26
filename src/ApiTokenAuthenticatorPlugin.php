@@ -88,6 +88,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
         ];
 
         // Load identifiers on the service
+        // @phpstan-ignore-next-line
         $service->loadIdentifier('Authentication.Token');
 
         $passwordIdentifierConfig = [
@@ -96,6 +97,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
         if (is_array($options['passwordHasher'])) {
             $passwordIdentifierConfig['passwordHasher'] = $options['passwordHasher'];
         }
+        // @phpstan-ignore-next-line
         $service->loadIdentifier('Authentication.Password', $passwordIdentifierConfig);
 
         // ProvisoryTokenAuthenticator - references Token identifier
