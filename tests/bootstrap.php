@@ -30,6 +30,7 @@ define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
 // define('APP', ROOT . 'App' . DS);
 // define('TMP', sys_get_temp_dir() . DS);
 define('CONFIG', ROOT . DS . 'config' . DS);
+define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
 
 Configure::write('debug', true);
 Configure::write(
