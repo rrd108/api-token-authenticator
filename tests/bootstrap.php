@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Authentication\Plugin as AuthPlugin;
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
@@ -54,6 +55,19 @@ ConnectionManager::setConfig(
         'quoteIdentifiers' => false,
     ]
 );
+
+Cache::setConfig('_cake_translations_', [
+    'className' => 'Cake\Cache\Engine\FileEngine',
+    'path' => sys_get_temp_dir(),
+    'prefix' => 'cake_translations_',
+    'serialize' => true,
+]);
+Cache::setConfig('_cake_model_', [
+    'className' => 'Cake\Cache\Engine\FileEngine',
+    'path' => sys_get_temp_dir(),
+    'prefix' => 'cake_model_',
+    'serialize' => true,
+]);
 
 Router::reload();
 //Security::setSalt('rrd');

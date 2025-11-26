@@ -80,32 +80,41 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
 
         $options = Configure::read('ApiTokenAuthenticator');
 
+        // Both authenticator and identifier should use the same field mapping
+        // The 'username' key maps to the database column name (e.g., 'email')
         $fields = [
             AbstractIdentifier::CREDENTIAL_USERNAME => $options['fields']['username'],
             AbstractIdentifier::CREDENTIAL_PASSWORD => $options['fields']['password'],
         ];
 
+        // ProvisoryTokenAuthenticator with Token identifier
+        $tokenIdentifier = [
+            'Authentication.Token' => [],
+        ];
         $service->loadAuthenticator(
             ProvisoryTokenAuthenticator::class,
             [
                 'header' => $options['header'],
-                'identifier' => 'Authentication.Token',
+                'identifier' => $tokenIdentifier,
             ]
         );
 
-        $identifierConfig = [
-            'identifier' => 'Authentication.Password',
+        // Build identifier config for Form authenticator
+        $passwordIdentifierConfig = [
             'fields' => $fields,
         ];
-
         if (is_array($options['passwordHasher'])) {
-            $identifierConfig['passwordHasher'] = $options['passwordHasher'];
+            $passwordIdentifierConfig['passwordHasher'] = $options['passwordHasher'];
         }
+        $passwordIdentifier = [
+            'Authentication.Password' => $passwordIdentifierConfig,
+        ];
 
         $service->loadAuthenticator(
             'Authentication.Form',
             [
                 'fields' => $fields,
+                'identifier' => $passwordIdentifier,
                 'loginUrl' => Router::url(
                     [
                         'prefix' => false,
@@ -115,7 +124,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
                         '_ext' => $options['login']['_ext'],
                     ]
                 ),
-            ] + $identifierConfig
+            ]
         );
 
         return $service;
