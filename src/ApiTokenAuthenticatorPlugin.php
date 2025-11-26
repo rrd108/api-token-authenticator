@@ -87,34 +87,30 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
             AbstractIdentifier::CREDENTIAL_PASSWORD => $options['fields']['password'],
         ];
 
-        // ProvisoryTokenAuthenticator with Token identifier
-        $tokenIdentifier = [
-            'Authentication.Token' => [],
-        ];
-        $service->loadAuthenticator(
-            ProvisoryTokenAuthenticator::class,
-            [
-                'header' => $options['header'],
-                'identifier' => $tokenIdentifier,
-            ]
-        );
-
-        // Build identifier config for Form authenticator
+        // Load identifiers on the service
+        $service->loadIdentifier('Authentication.Token');
+        
         $passwordIdentifierConfig = [
             'fields' => $fields,
         ];
         if (is_array($options['passwordHasher'])) {
             $passwordIdentifierConfig['passwordHasher'] = $options['passwordHasher'];
         }
-        $passwordIdentifier = [
-            'Authentication.Password' => $passwordIdentifierConfig,
-        ];
+        $service->loadIdentifier('Authentication.Password', $passwordIdentifierConfig);
 
+        // ProvisoryTokenAuthenticator - references Token identifier
+        $service->loadAuthenticator(
+            ProvisoryTokenAuthenticator::class,
+            [
+                'header' => $options['header'],
+            ]
+        );
+
+        // Form authenticator - references Password identifier
         $service->loadAuthenticator(
             'Authentication.Form',
             [
                 'fields' => $fields,
-                'identifier' => $passwordIdentifier,
                 'loginUrl' => Router::url(
                     [
                         'prefix' => false,

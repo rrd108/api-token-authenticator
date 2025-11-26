@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace TestApp;
 
+use ApiTokenAuthenticator\ApiTokenAuthenticatorPlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
@@ -26,10 +27,21 @@ class Application extends BaseApplication
         );
     }
 
+    public function bootstrap(): void
+    {
+        parent::bootstrap();
+        $this->addPlugin(ApiTokenAuthenticatorPlugin::class);
+    }
+
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
-        return $middlewareQueue->add(new RoutingMiddleware($this))
+        $middlewareQueue->add(new RoutingMiddleware($this))
             ->add(new BodyParserMiddleware());
+
+        // Add plugin middleware
+        $middlewareQueue = $this->pluginMiddleware($middlewareQueue);
+
+        return $middlewareQueue;
     }
 
     public function services(ContainerInterface $container): void
