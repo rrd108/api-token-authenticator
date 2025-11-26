@@ -89,7 +89,7 @@ class ApiTokenAuthenticatorPlugin extends BasePlugin implements AuthenticationSe
 
         // Load identifiers on the service
         $service->loadIdentifier('Authentication.Token');
-        
+
         $passwordIdentifierConfig = [
             'fields' => $fields,
         ];
